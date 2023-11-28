@@ -44,7 +44,6 @@ const authMiddleware = async (req, res, next) => {
       },
     };
     const dynamicDb = knex(dynamicDbConfig['development']);
-    delete decoded.gps_tracking;
     req.userData = { ...decoded };
     req.userConn = dynamicDb ;
     req.token = token;
