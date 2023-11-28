@@ -1,0 +1,21 @@
+{
+  "name": "restapi_logistic",
+  "version": "1.0.0",
+  "description": "restapi meta logistic mobile",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "rado simarmata",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.0.1",
+    "momentjs": "^2.0.0",
+    "pg": "^8.11.3"
+  }
+}
