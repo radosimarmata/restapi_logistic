@@ -24,6 +24,8 @@ const authMiddleware = async (req, res, next) => {
   try {
     const decoded = await verifyToken(token, JWT_SECRET);
 
+    
+
     const dynamicDbConfig = {
       development: {
         client: 'pg',
@@ -32,7 +34,7 @@ const authMiddleware = async (req, res, next) => {
           port: 5432,
           user: 'fms',
           password: 'fms', 
-          database: decoded.db_name,
+          database: decoded.gps_tracking.db_name,
         },
         dialect: 'postgres',
         pool: {
@@ -43,8 +45,20 @@ const authMiddleware = async (req, res, next) => {
       },
     };
     const dynamicDb = knex(dynamicDbConfig['development']);
-    req.userData = { ...decoded, dynamicDb };
+    delete decoded.gps_tracking;
+    req.userData = { ...decoded };
+    req.userConn = dynamicDb ;
     req.token = token;
+
+    res.on('finish', () => {
+      req.userConn.destroy()
+        .then(() => {
+          console.log('Knex connection destroyed');
+        })
+        .catch((error) => {
+          console.error('Error destroying Knex connection:', error);
+        });
+    });
     next();
   } catch (error) {
     console.error('Error verifying token:', error);

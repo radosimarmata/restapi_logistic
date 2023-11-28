@@ -16,6 +16,7 @@ app.get("/api", (req, res) => {
 
 app.use('/api', require('./routes/auth.route'));
 app.use('/api', require('./routes/monitoring.route'));
+app.use('/api', require('./routes/vehicle.route'));
 
 app.use(function (req, res, next) {
   res.status(404).json({

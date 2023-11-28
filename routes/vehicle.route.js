@@ -1,40 +1,38 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth.middleware');
+const db = require('../config/db');
 
-router.get('/monitoring', authMiddleware, async (req, res) => {
+router.get('/vehicle', authMiddleware, async (req, res) => {
   try {
     const userData = req.userData;
     const knex = req.userConn;
+    const vehicle = await knex('vehicle')
+      .where('imei', userData.vehicle.imei)
+      .first();
+
     res.json({
-      message: 'Retrieved monitoring data'
+      message: 'Retrieved vehicle data',
+      userData: userData,
+      vehicle : vehicle
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-router.get('/monitoring/detail', authMiddleware, async (req, res) => {
+router.get('/vehicle/detail', authMiddleware, async (req, res) => {
   try {
     const userData = req.userData;
     const knex = req.userConn;
     const vehicle = await knex('vehicle')
-      .where('imei', userData.gps_tracking.imei)
+      .where('imei', userData.vehicle.imei)
       .first();
-    const operator = await knex('operators')
-      .whereIn('nrp', [userData.nrp_1, 'OPR0124']);
-
-    const data = {
-      driver1 : operator[0].name,
-      driver2 : operator[1] ? operator[1].name : '',
-      nopol : vehicle.nopol
-    };
 
     res.json({
-      message: 'Retrieved monitoring detail data',
-      data: data,
-      vehicle: vehicle
+      message: 'Retrieved vehicle data',
+      userData: userData,
+      vehicle : vehicle
     });
   } catch (error) {
     console.error(error);
